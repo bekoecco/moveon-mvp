@@ -1,5 +1,7 @@
 import React from 'react';
 import { FEEDBACK_URL } from './config';
+import logoFull from './logo-full.jpg';
+import logoMark from './logo-mark.jpg';
 import { Bullets, Caption, Closing, Facts, FileCard, Link, Paragraph, Route, Routes, TextField, useLocalState } from './ui';
 
 /* ------------------------------------------------------------------ */
@@ -35,6 +37,19 @@ const CATALOG: Record<string, { name: string; price: number }> = {};
 PIECES.forEach(p => { CATALOG[p.id] = { name: p.name, price: p.resale }; });
 BUNDLES.forEach(b => { CATALOG[b.id] = { name: b.name + ' (bundle)', price: b.price }; });
 
+type Addon = { id: string; name: string; detail: string; price: number; icon: string };
+
+const ADDONS: Addon[] = [
+    { id: 'packing', name: 'Packing help', detail: 'A pair of hands packs your stuff into boxes', price: 49, icon: 'box' },
+    { id: 'box-kit', name: 'Box kit', detail: '10 boxes, tape and labels dropped off ahead of pickup', price: 24, icon: 'boxes' },
+    { id: 'on-loading', name: 'On-loading', detail: 'We load your car, van or storage unit', price: 29, icon: 'load' },
+    { id: 'off-loading', name: 'Off-loading', detail: 'We unload and carry everything in at the new place', price: 29, icon: 'unload' },
+    { id: 'short-move', name: 'Short move', detail: 'Across campus or across town, door to door', price: 59, icon: 'route' },
+    { id: 'full-move', name: 'Full move', detail: 'Load, drive and unload, the whole trip handled', price: 99, icon: 'truck' },
+];
+const ADDON_BY_ID: Record<string, Addon> = {};
+ADDONS.forEach(a => { ADDON_BY_ID[a.id] = a; });
+
 const CAMPUSES = ['UC Berkeley', 'Stanford', 'SF State', 'San Jose State'];
 const MOVE_OUT_DATES = ['Fri 18 Dec 2026', 'Sat 19 Dec 2026', 'Sun 20 Dec 2026'];
 const MOVE_IN_DATES = ['Mon 11 Jan 2027', 'Tue 12 Jan 2027', 'Wed 13 Jan 2027'];
@@ -61,6 +76,10 @@ const ICONS: Record<string, React.ReactNode> = {
     fridge: <><rect x="7" y="3" width="10" height="18" rx="1.5" /><path d="M7 10h10M9.5 6h.01M9.5 13v3" /></>,
     room: <><path d="M4 20V9l8-5 8 5v11" /><path d="M9 20v-6h6v6" /></>,
     box: <><path d="M12 3 4 7v10l8 4 8-4V7l-8-4Z" /><path d="M4 7l8 4 8-4M12 11v10" /></>,
+    boxes: <><path d="M8 3 3 5.5v5L8 13l5-2.5v-5L8 3Z" /><path d="M3 5.5 8 8l5-2.5M8 8v5" /><path d="M16 11l-5 2.5v5L16 21l5-2.5v-5L16 11Z" /><path d="M11 13.5 16 16l5-2.5M16 16v5" /></>,
+    load: <><path d="M4 15h16v5H4z" /><path d="M12 3v8M8.5 6.5 12 3l3.5 3.5" /></>,
+    unload: <><path d="M4 15h16v5H4z" /><path d="M12 4v8M8.5 9 12 12.5 15.5 9" /></>,
+    route: <><path d="M6 19s-2.5-2.2-2.5-4.5A2.5 2.5 0 0 1 6 12a2.5 2.5 0 0 1 2.5 2.5C8.5 16.8 6 19 6 19Z" /><path d="M18 12s-2.5-2.2-2.5-4.5A2.5 2.5 0 0 1 18 5a2.5 2.5 0 0 1 2.5 2.5C20.5 9.8 18 12 18 12Z" /><path d="M8 17.5c4 1.5 7 .5 8.5-3.5" strokeDasharray="2.5 2.5" /></>,
     truck: <><path d="M2 6h12v10H2zM14 10h4l3 3v3h-7" /><circle cx="6.5" cy="17.5" r="1.8" /><circle cx="16.5" cy="17.5" r="1.8" /></>,
     tag: <><path d="M3 11V4h7l10 10-7 7L3 11Z" /><circle cx="8.5" cy="9.5" r="1.4" /></>,
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></>,
@@ -109,8 +128,8 @@ function SectionLabel({ icon, children }: { icon: string; children: React.ReactN
 function AppBar({ back }: { back?: boolean }) {
     return <div className="mv-appbar">
         {back && <Link className="mv-back" to="/" aria-label="Back to home"><Icon name="back" size={16} /></Link>}
-        <span className="mv-appbar-icon"><Icon name="box" size={17} /></span>
-        <p className="mv-appbar-name">MoveOn</p>
+        <span className="mv-appbar-icon"><img src={logoMark} alt="" /></span>
+        <p className="mv-appbar-name">Campus <span className="mv-brand-cycle">Cycle</span></p>
         <span className="mv-demo-pill">EARLY DEMO</span>
     </div>;
 }
@@ -149,7 +168,7 @@ function CtaBar({ total, label, disabled, onClick, onBack }: {
 function Gradients() {
     return <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true"><defs>
         <linearGradient id="mvGradRing" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#3b7cff" /><stop offset="1" stopColor="#22d3ee" />
+            <stop offset="0" stopColor="#13b851" /><stop offset="1" stopColor="#fdc30f" />
         </linearGradient>
     </defs></svg>;
 }
@@ -180,7 +199,11 @@ function Start() {
         <div className="mv-hero">
             <div className="mv-hero-glow g1" /><div className="mv-hero-glow g2" />
             <div className="mv-hero-inner">
-                <p className="mv-hero-line">Students moving out leave furniture behind. Students moving in need it. MoveOn picks it up, stores it between semesters and delivers it.</p>
+                <span className="mv-star s1"><Icon name="spark" size={17} /></span>
+                <span className="mv-star s2"><Icon name="spark" size={12} /></span>
+                <span className="mv-star s3"><Icon name="spark" size={14} /></span>
+                <img className="mv-hero-logo" src={logoFull} alt="Campus Cycle: student furniture pick up and resale" />
+                <p className="mv-hero-line">Students moving out leave furniture behind. Students moving in need it. Campus Cycle picks it up, stores it between semesters and delivers it, with add-ons for the packing, loading and the move itself.</p>
                 <div className="mv-journeys">
                     <Link className="mv-journey" to="/moving-out">
                         <span className="mv-journey-icon"><Icon name="truck" size={22} /></span>
@@ -208,12 +231,22 @@ function Start() {
             <li className="mv-step"><span className="mv-step-n">3</span><p>Incoming students buy pieces or bundles at second-hand prices.</p></li>
             <li className="mv-step"><span className="mv-step-n">4</span><p>Orders arrive in move-in week, and sellers get their share after pieces sell.</p></li>
         </ol>
+        <SectionLabel icon="spark">Add-ons: more than furniture</SectionLabel>
+        <div className="mv-addons">
+            {ADDONS.map(a => <div className="mv-addon" key={a.id}>
+                <span className="mv-addon-icon"><Icon name={a.icon} size={20} /></span>
+                <p className="mv-addon-name">{a.name}</p>
+                <p className="mv-addon-detail">{a.detail}</p>
+                <span className="mv-addon-price">from {money(a.price)}</span>
+            </div>)}
+        </div>
+        <Caption>Full-service mover extras, sized for a student budget. Pick them inside a pickup booking. Demo prices, like everything here.</Caption>
         <div style={{ marginTop: 16 }}>
             <Link className="mv-linkcard" to="/how-it-works">
                 <span className="mv-label-icon"><Icon name="wallet" size={15} /></span>
                 <span>
                     <span className="t">How it works</span>
-                    <span className="d" style={{ display: 'block' }}>The three ways MoveOn could charge, and what is demo here.</span>
+                    <span className="d" style={{ display: 'block' }}>The three ways Campus Cycle could charge, and what is demo here.</span>
                 </span>
                 <span className="arr"><Icon name="arrow" size={16} /></span>
             </Link>
@@ -230,6 +263,7 @@ function Start() {
 type MoveOutDraft = {
     items: Record<string, number>;
     service: '' | 'sell' | 'clear';
+    addons: string[];
     campus: string;
     date: string;
     name: string;
@@ -237,34 +271,40 @@ type MoveOutDraft = {
     ref: string;
 };
 
-const EMPTY_MOVE_OUT: MoveOutDraft = { items: {}, service: '', campus: '', date: '', name: '', email: '', ref: '' };
+const EMPTY_MOVE_OUT: MoveOutDraft = { items: {}, service: '', addons: [], campus: '', date: '', name: '', email: '', ref: '' };
 
 function MovingOut() {
-    const [draft, setDraft, saved] = useLocalState<MoveOutDraft>('moveon-moveout.v1', EMPTY_MOVE_OUT);
+    const [draft, setDraft, saved] = useLocalState<MoveOutDraft>('campuscycle-moveout.v1', EMPTY_MOVE_OUT);
     const [step, setStep] = React.useState(1);
     const set = (patch: Partial<MoveOutDraft>) => { if (saved.ready) setDraft({ ...draft, ...patch }); };
 
     const pieces = countItems(draft.items);
     const listingTotal = PIECES.reduce((sum, p) => sum + p.resale * (draft.items[p.id] || 0), 0);
     const payout = Math.round(listingTotal / 2);
+    const addonsTotal = draft.addons.reduce((s, id) => s + (ADDON_BY_ID[id]?.price || 0), 0);
+    const addonNames = draft.addons.map(id => ADDON_BY_ID[id]?.name).filter(Boolean).join(', ');
+    const clearFee = 'about ' + money(99 + addonsTotal) + ' to ' + money(109 + addonsTotal);
+    const toggleAddon = (id: string) => set({ addons: draft.addons.includes(id) ? draft.addons.filter(a => a !== id) : [...draft.addons, id] });
 
     const readyAll = pieces > 0 && draft.service !== '' && draft.campus !== '' && draft.date !== '' && draft.name.trim() !== '' && draft.email.trim() !== '';
-    const stepValid = step >= 5 ? readyAll : [true,
+    const stepValid = step >= 6 ? readyAll : [true,
         pieces > 0,
         draft.service !== '',
+        true,
         draft.campus !== '' && draft.date !== '',
         draft.name.trim() !== '' && draft.email.trim() !== '',
     ][step];
     const hint = ['',
         'Tap + on each piece you have. Quantities are a guess at this stage, which is fine.',
         'Choose what should happen to your furniture.',
+        'Add-ons are optional: pick any, or skip.',
         'Choose a campus and a pickup day.',
         'Add your name and student email.',
     ][step];
 
-    const next = () => { if (stepValid && step < 5) { setStep(step + 1); scrollTop(); } };
+    const next = () => { if (stepValid && step < 6) { setStep(step + 1); scrollTop(); } };
     const back = () => { if (step > 1) { setStep(step - 1); scrollTop(); } };
-    const book = () => { set({ ref: makeRef('MV-OUT') }); scrollTop(); };
+    const book = () => { set({ ref: makeRef('CC-OUT') }); scrollTop(); };
 
     if (draft.ref) {
         return <div className="mv">
@@ -280,10 +320,11 @@ function MovingOut() {
                 <div className="mv-ticket-body">
                     <Facts items={[
                         { label: 'Pieces', value: `${pieces}` },
-                        { label: 'Service', value: draft.service === 'sell' ? 'Sell through MoveOn' : 'Clear-out pickup' },
+                        { label: 'Service', value: draft.service === 'sell' ? 'Sell through Campus Cycle' : 'Clear-out pickup' },
                         { label: 'Campus', value: draft.campus },
                         { label: 'Pickup day', value: draft.date + ' (demo date)' },
-                        { label: draft.service === 'sell' ? 'Estimated payout' : 'Estimated fee', value: draft.service === 'sell' ? money(payout) + ' if all pieces sell' : 'about $99 to 109' },
+                        { label: 'Add-ons', value: addonNames ? addonNames + ' (' + money(addonsTotal) + ')' : 'None' },
+                        { label: draft.service === 'sell' ? 'Estimated payout' : 'Estimated fee', value: draft.service === 'sell' ? money(payout) + ' if all pieces sell' : clearFee },
                     ]} />
                 </div>
             </div>
@@ -296,7 +337,7 @@ function MovingOut() {
 
     return <div className="mv">
         <AppBar back />
-        <ScreenHead title="Moving out" step={step} total={5} />
+        <ScreenHead title="Moving out" step={step} total={6} />
         <StorageNote message={saved.message} ready={saved.ready} />
 
         {step === 1 && <>
@@ -325,7 +366,7 @@ function MovingOut() {
                     onClick={() => set({ service: 'sell' })}>
                     <span className="mv-service-icon"><Icon name="wallet" size={21} /></span>
                     <span>
-                        <p className="mv-service-name">Sell through MoveOn</p>
+                        <p className="mv-service-name">Sell through Campus Cycle</p>
                         <p className="mv-service-detail">We list your pieces and you get a share when they sell.</p>
                     </span>
                     <span className="mv-service-check"><Icon name="check" size={13} /></span>
@@ -342,16 +383,38 @@ function MovingOut() {
                 </button>
             </div>
             {draft.service === 'sell' && <EstimatePanel
-                lines={[{ k: `Estimated listing total, ${pieces || 'your'} pieces`, v: money(listingTotal) }]}
+                lines={[{ k: `Estimated listing total, ${pieces || 'your'} pieces`, v: money(listingTotal) },
+                    ...(addonsTotal > 0 ? [{ k: 'Add-ons, charged once at pickup', v: money(addonsTotal) }] : [])]}
                 totalLabel="Your estimated share, 50 percent" totalValue={money(payout)}
-                note="Estimates, not a promise. The 50/50 split is an assumption we want to test. Anything unsold at the end of the season can be cleared at the pickup rate or donated." />}
+                note="Estimates, not a promise. The 50/50 split is an assumption we want to test. Add-ons are charged on top. Anything unsold at the end of the season can be cleared at the pickup rate or donated." />}
             {draft.service === 'clear' && <EstimatePanel
-                lines={[]}
-                totalLabel="Estimated fee for the whole job" totalValue="about $99 to 109"
+                lines={addonsTotal > 0 ? [{ k: 'Clear-out fee', v: 'about $99 to 109' }, { k: 'Add-ons', v: money(addonsTotal) }] : []}
+                totalLabel="Estimated fee for the whole job" totalValue={clearFee}
                 note="A rough estimate. You pay one fee and everything is gone before your flight." />}
         </>}
 
         {step === 3 && <>
+            <SectionLabel icon="spark">Anything else? Add-ons</SectionLabel>
+            <div className="mv-services">
+                {ADDONS.map(a => {
+                    const on = draft.addons.includes(a.id);
+                    return <button type="button" aria-pressed={on} key={a.id}
+                        className={'mv-service' + (on ? ' on' : '')}
+                        onClick={() => toggleAddon(a.id)}>
+                        <span className="mv-service-icon"><Icon name={a.icon} size={21} /></span>
+                        <span>
+                            <p className="mv-service-name">{a.name}</p>
+                            <p className="mv-service-detail">{a.detail}</p>
+                            <span className="mv-item-price">about {money(a.price)}</span>
+                        </span>
+                        <span className="mv-service-check"><Icon name="check" size={13} /></span>
+                    </button>;
+                })}
+            </div>
+            <Caption>Extra hands around the move itself, charged once with your pickup. Demo prices.</Caption>
+        </>}
+
+        {step === 4 && <>
             <SectionLabel icon="calendar">Pickup day</SectionLabel>
             <Sub>Campus</Sub>
             <Chips label="Campus" options={CAMPUSES} value={draft.campus} onChange={v => set({ campus: v })} />
@@ -360,27 +423,28 @@ function MovingOut() {
             <Caption>Pickups are batched on set days in move-out week. That is how the cost stays low.</Caption>
         </>}
 
-        {step === 4 && <>
+        {step === 5 && <>
             <SectionLabel icon="user">Your details</SectionLabel>
             <TextField label="Name" value={draft.name} onChange={v => set({ name: v })} />
             <TextField label="Student email" value={draft.email} onChange={v => set({ email: v })} />
             <Caption>Demo only. This goes nowhere.</Caption>
         </>}
 
-        {step === 5 && <>
+        {step === 6 && <>
             <SectionLabel icon="list">Review and book</SectionLabel>
             <div className="mv-summary">
                 <div className="line"><span className="k">Pieces</span><span className="v">{pieces}</span></div>
-                <div className="line"><span className="k">Service</span><span className="v">{draft.service === 'sell' ? 'Sell through MoveOn' : draft.service === 'clear' ? 'Clear-out pickup' : 'Not chosen'}</span></div>
+                <div className="line"><span className="k">Service</span><span className="v">{draft.service === 'sell' ? 'Sell through Campus Cycle' : draft.service === 'clear' ? 'Clear-out pickup' : 'Not chosen'}</span></div>
+                <div className="line"><span className="k">Add-ons</span><span className="v">{addonNames ? addonNames + ' (' + money(addonsTotal) + ')' : 'None'}</span></div>
                 <div className="line"><span className="k">Campus</span><span className="v">{draft.campus || 'Not chosen'}</span></div>
                 <div className="line"><span className="k">Pickup day</span><span className="v">{draft.date || 'Not chosen'}</span></div>
-                <div className="line total"><span className="k">{draft.service === 'clear' ? 'Estimated fee' : 'Estimated payout'}</span><span className="v">{draft.service === '' ? 'Choose a service first' : draft.service === 'clear' ? 'about $99 to 109' : money(payout) + ' if all pieces sell'}</span></div>
+                <div className="line total"><span className="k">{draft.service === 'clear' ? 'Estimated fee' : 'Estimated payout'}</span><span className="v">{draft.service === '' ? 'Choose a service first' : draft.service === 'clear' ? clearFee : money(payout) + ' if all pieces sell'}</span></div>
             </div>
         </>}
 
-        {step < 5
+        {step < 6
             ? <>{!stepValid && <Caption>{hint}</Caption>}<CtaBar label="Continue" disabled={!stepValid} onClick={next} onBack={step > 1 ? back : undefined} /></>
-            : <CtaBar total={draft.service === 'clear' ? 'about $99 to 109' : draft.service === 'sell' ? money(payout) + ' back' : undefined}
+            : <CtaBar total={draft.service === 'clear' ? clearFee : draft.service === 'sell' ? money(payout) + ' back' : undefined}
                 label="Book this pickup (demo)" disabled={!stepValid} onClick={book} onBack={back} />}
     </div>;
 }
@@ -401,7 +465,7 @@ type MoveInDraft = {
 const EMPTY_MOVE_IN: MoveInDraft = { cart: {}, campus: '', date: '', name: '', email: '', ref: '' };
 
 function MovingIn() {
-    const [draft, setDraft, saved] = useLocalState<MoveInDraft>('moveon-movein.v1', EMPTY_MOVE_IN);
+    const [draft, setDraft, saved] = useLocalState<MoveInDraft>('campuscycle-movein.v1', EMPTY_MOVE_IN);
     const [step, setStep] = React.useState(1);
     const set = (patch: Partial<MoveInDraft>) => { if (saved.ready) setDraft({ ...draft, ...patch }); };
 
@@ -421,7 +485,7 @@ function MovingIn() {
 
     const next = () => { if (stepValid && step < 5) { setStep(step + 1); scrollTop(); } };
     const back = () => { if (step > 1) { setStep(step - 1); scrollTop(); } };
-    const reserve = () => { set({ ref: makeRef('MV-IN') }); scrollTop(); };
+    const reserve = () => { set({ ref: makeRef('CC-IN') }); scrollTop(); };
     const addOne = (id: string) => set({ cart: { ...draft.cart, [id]: (draft.cart[id] || 0) + 1 } });
 
     if (draft.ref) {
@@ -545,13 +609,13 @@ function HowItWorks() {
     return <div className="mv">
         <AppBar back />
         <div className="mv-top"><p className="mv-top-title">How it works</p></div>
-        <SectionLabel icon="wallet">Three ways MoveOn could charge</SectionLabel>
+        <SectionLabel icon="wallet">Three ways Campus Cycle could charge</SectionLabel>
         <div className="mv-models">
             {models.map(m => <div className="mv-model" key={m.n}>
                 <div className="mv-model-top"><span className="mv-model-n">{m.n}</span><p className="mv-model-name">{m.name}</p></div>
                 <dl>
                     <div><dt>Who pays</dt><dd>{m.pays}</dd></div>
-                    <div><dt>What MoveOn does</dt><dd>{m.does}</dd></div>
+                    <div><dt>What Campus Cycle does</dt><dd>{m.does}</dd></div>
                     <div><dt>In this demo</dt><dd>{m.here}</dd></div>
                 </dl>
             </div>)}
@@ -560,6 +624,7 @@ function HowItWorks() {
         <Bullets items={[
             'Every piece, price, date, booking and reservation on this page is demo data. No crew, payment or message is real.',
             'The pickup fee of about $99 to 109 per job and the 50/50 resale split are rough estimates we want your reaction to.',
+            'Add-ons like packing help, on-loading, off-loading and short moves are demo services with rough prices.',
             'Still open: which of the three models to start with, and which campuses to launch on first. Your feedback decides this.',
         ]} />
         <FeedbackCard />
