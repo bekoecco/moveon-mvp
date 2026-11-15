@@ -204,6 +204,7 @@ function Start() {
                 <span className="mv-star s3"><Icon name="spark" size={14} /></span>
                 <img className="mv-hero-logo" src={logoFull} alt="Campus Cycle: student furniture pick up and resale" />
                 <p className="mv-hero-line">Students moving out leave furniture behind. Students moving in need it. Campus Cycle picks it up, stores it between semesters and delivers it, with add-ons for the packing, loading and the move itself.</p>
+                <p className="mv-hero-line"><strong><span className="mv-brand-cycle">✓</span> Every piece is cleaned and inspected.</strong></p>
                 <div className="mv-journeys">
                     <Link className="mv-journey" to="/moving-out">
                         <span className="mv-journey-icon"><Icon name="truck" size={22} /></span>
