@@ -1,4 +1,4 @@
-# Campus Cycle - early demo
+# DormDrop - early demo
 
 Students moving out pass furniture to students moving in, with add-ons like packing, on-loading, off-loading and short moves. This is an early demo with sample data: no real pickups, deliveries or payments yet.
 
@@ -9,3 +9,5 @@ npm install
 npm run dev
 npm run build
 ```
+
+Whole-room demo: sellers set one discounted price and preview a local listing. Buyers can review and simulate reserving a complete set. Listings stay in the same browser only, not a shared marketplace. No real transactions.
