@@ -49,7 +49,7 @@ const ADDONS: Addon[] = [
 const ADDON_BY_ID: Record<string, Addon> = {};
 ADDONS.forEach(a => { ADDON_BY_ID[a.id] = a; });
 
-const CAMPUSES = ['UC Berkeley', 'Stanford', 'SF State', 'San Jose State'];
+const CAMPUSES = ['UIC', 'Illinois Tech', 'Northwestern', 'UChicago'];
 const MOVE_OUT_DATES = ['Fri 18 Dec 2026', 'Sat 19 Dec 2026', 'Sun 20 Dec 2026'];
 const MOVE_IN_DATES = ['Mon 11 Jan 2027', 'Tue 12 Jan 2027', 'Wed 13 Jan 2027'];
 const DELIVERY_FEE = 29;
