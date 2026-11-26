@@ -600,3 +600,12 @@ body { background: var(--ds-page); }
     .cr-card .cr-line { animation: none !important; stroke-dashoffset: 0 !important; }
     .cr-boxy-wob { animation: none; }
 }
+
+/* ---- order activity list ---- */
+.dd-activity { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 0; }
+.dd-activity-item { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid var(--ds-hairline); }
+.dd-activity-item:last-child { border-bottom: none; }
+.dd-activity-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: #38c6b4; margin-top: 7px; }
+.dd-activity-item:first-child .dd-activity-dot { background: #f2762e; box-shadow: 0 0 0 3px rgba(242, 118, 46, .2); }
+.dd-activity-item p { margin: 0; font-size: 13.5px; color: var(--ds-ink-2); line-height: 1.5; }
+.dd-activity-item:first-child p { color: var(--ds-ink); font-weight: 600; }

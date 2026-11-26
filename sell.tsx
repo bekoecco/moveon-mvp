@@ -78,7 +78,7 @@ export function SellFlow() {
         <Gradients />
         {step === 1 && <>
             <ScreenHead title="What are you selling?" step={1} total={3} />
-            <Sub>Diagram step 3: enter furniture to sell - details, photos and condition.</Sub>
+            <Sub>Enter the furniture you are selling: details, photos and condition.</Sub>
             <SectionLabel icon="tag">Items</SectionLabel>
             <div className="mv-items">
                 {PIECES.map(p => <div className={'mv-item' + (items[p.id] > 0 ? ' on' : '')} key={p.id}>
@@ -107,7 +107,7 @@ export function SellFlow() {
         </>}
         {step === 2 && <>
             <ScreenHead title="Pickup date and place" step={2} total={3} />
-            <Sub>Diagram step 4: request a pickup date. DormDropp collects during move-out week.</Sub>
+            <Sub>Request a pickup date. DormDropp collects during move-out week.</Sub>
             <SectionLabel icon="pin">Pickup campus</SectionLabel>
             <Chips label="Pickup campus" options={CAMPUSES} value={place} onChange={setPlace} />
             <SectionLabel icon="calendar">Pickup date</SectionLabel>

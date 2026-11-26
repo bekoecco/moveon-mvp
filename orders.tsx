@@ -5,56 +5,6 @@ import { EMPTY_MARKET, Market, Order, OrderStage, STAGE_LABEL, money } from './m
 import { AppBar, Icon, SectionLabel } from './widgets';
 import { Boxy } from './crayon';
 
-/* The 13 steps of Bek's flow diagram, grouped by actor. */
-const STEPS: { n: number; actor: 'buyer' | 'seller' | 'platform'; title: string }[] = [
-    { n: 1, actor: 'buyer', title: 'Requests furniture - types, preferred colors, dropoff date and place' },
-    { n: 2, actor: 'buyer', title: 'Accepts the estimated price' },
-    { n: 3, actor: 'seller', title: 'Enters furniture to sell - details, pickup date and place, photos and condition' },
-    { n: 4, actor: 'seller', title: 'Requests a pickup date' },
-    { n: 5, actor: 'buyer', title: 'Accepts an offer and makes the deposit (picks one if several sellers offered)' },
-    { n: 6, actor: 'seller', title: 'Confirms the order and pickup date' },
-    { n: 7, actor: 'platform', title: 'Facilitates the furniture quality check with the seller, digital and non-digital' },
-    { n: 8, actor: 'platform', title: 'Quality pass?' },
-    { n: 9, actor: 'platform', title: 'Fraud: cancel the order and return the deposit' },
-    { n: 10, actor: 'platform', title: 'Quality not as submitted: renegotiate the price, update the system, inform buyer and seller' },
-    { n: 11, actor: 'platform', title: 'Quality as submitted: arrange pickup and dropoff' },
-    { n: 12, actor: 'buyer', title: 'Receives the furniture and pays the platform' },
-    { n: 13, actor: 'seller', title: 'Receives the payout' },
-];
-
-type StepState = 'done' | 'now' | 'todo' | 'skip';
-
-function stepState(o: Order, n: number): StepState {
-    if (n <= 5) return 'done';
-    const s = o.stage;
-    if (s === 'cancelled') {
-        if (n === 6) return 'done';
-        if (n === 7 || n === 8) return o.qcOutcome ? 'done' : 'todo';
-        if (n === 9) return o.qcOutcome === 'fraud' ? 'done' : 'skip';
-        if (n === 10) return o.renegotiated === 'declined' ? 'done' : 'skip';
-        return 'skip';
-    }
-    if (n === 6) return s === 'awaiting-seller' ? 'now' : 'done';
-    if (n === 7) return s === 'quality' ? 'now' : s === 'awaiting-seller' ? 'todo' : 'done';
-    if (n === 8) return s === 'quality' ? 'now' : s === 'awaiting-seller' ? 'todo' : 'done';
-    if (n === 9) return 'skip';
-    if (n === 10) {
-        if (s === 'renegotiate') return 'now';
-        return o.renegotiated === 'accepted' ? 'done' : 'skip';
-    }
-    if (n === 11) {
-        if (s === 'awaiting-seller' || s === 'quality' || s === 'renegotiate') return 'todo';
-        if (s === 'logistics') return 'now';
-        return 'done';
-    }
-    if (n === 12) {
-        if (s === 'delivered') return 'now';
-        if (s === 'complete') return 'done';
-        return 'todo';
-    }
-    return s === 'complete' ? 'done' : 'todo';
-}
-
 const pillClass = (s: OrderStage) =>
     'dd-pill' + (s === 'complete' ? ' done' : s === 'cancelled' ? ' cancel' : ' wait');
 
@@ -119,7 +69,7 @@ export function OrderDetail() {
             order.stage === 'complete' ? 'Delivered. New room, happy sofa.' :
             order.stage === 'cancelled' ? 'This one fell through. The deposit went back.' :
             order.stage === 'transit' ? 'On the truck. I am riding along.' :
-            'Following this order step by step.'} /></div>
+            'I will keep you posted as things move.'} /></div>
 
         {order.stage === 'cancelled' && <div className="dd-banner warn">
             Order cancelled{order.qcOutcome === 'fraud' ? ' for fraud: the furniture did not match the listing at all' : ''}. The {money(order.deposit)} deposit was returned to the buyer (demo).
@@ -131,36 +81,23 @@ export function OrderDetail() {
             Pickup arranged for {order.pickup} at {order.pickupPlace}; dropoff {order.dropoff} at {order.dropoffPlace}.
         </div>}
 
-        <SectionLabel icon="list">Flow progress</SectionLabel>
-        <ol className="dd-timeline">
-            {STEPS.map(s => {
-                const st = stepState(order, s.n);
-                const ev = order.events.filter(e => e.step === s.n);
-                return <React.Fragment key={s.n}>
-                    {(s.n === 1 || s.n === 5 || s.n === 12) && <li className="dd-tl-actor">Buyer</li>}
-                    {(s.n === 3 || s.n === 6 || s.n === 13) && <li className="dd-tl-actor seller">Seller</li>}
-                    {(s.n === 7) && <li className="dd-tl-actor platform">Platform</li>}
-                    <li className={'dd-tl ' + (st === 'skip' ? 'skip' : st)}>
-                        <span className="dd-tl-n">{st === 'done' ? <Icon name="check" size={14} /> : s.n}</span>
-                        <span className="dd-tl-body">
-                            <p className="dd-tl-title">{s.title}</p>
-                            {ev.map((e, i) => <p className="dd-tl-detail" key={i}>{e.note}</p>)}
-                            {st === 'now' && <p className="dd-tl-detail">In progress now.</p>}
-                        </span>
-                    </li>
-                </React.Fragment>;
-            })}
+        <SectionLabel icon="list">Activity</SectionLabel>
+        <ol className="dd-activity">
+            {[...order.events].reverse().slice(0, 6).map((e, i) => <li key={i} className="dd-activity-item">
+                <span className="dd-activity-dot" aria-hidden="true" />
+                <p>{e.note}</p>
+            </li>)}
         </ol>
 
         {order.stage === 'awaiting-seller' && <div className="dd-panel">
-            <p className="dd-panel-role">Seller action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">Confirm the order and pickup date</p>
             <p className="dd-panel-text">{order.seller === 'You' ? 'A buyer accepted your offer.' : order.seller + ' reviews the order.'} Pickup: {order.pickup}, {order.pickupPlace}.</p>
             <button className="mv-cta" onClick={() => update({ stage: 'quality' }, { step: 6, note: (order.seller === 'You' ? 'You confirmed' : order.seller + ' confirmed') + ' the order and pickup on ' + order.pickup + ', ' + order.pickupPlace + '.' })}>Confirm order and pickup<Icon name="arrow" size={17} /></button>
         </div>}
 
         {order.stage === 'quality' && <div className="dd-panel">
-            <p className="dd-panel-role">Platform action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">Run the quality check</p>
             <p className="dd-panel-text">DormDropp compares the listing photos and condition with the furniture, digitally first and in person at pickup. Listing says: {order.condition.toLowerCase()} condition.</p>
             <div className="dd-panel-row">
@@ -176,7 +113,7 @@ export function OrderDetail() {
         </div>}
 
         {order.stage === 'renegotiate' && <div className="dd-panel">
-            <p className="dd-panel-role">Buyer action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">New price proposed</p>
             <p className="dd-panel-text">The quality check found the furniture below the listed condition. New price: {money(order.newPrice || order.price)} (was {money(order.price)}). The deposit stays the same.</p>
             <div className="dd-panel-row">
@@ -186,21 +123,21 @@ export function OrderDetail() {
         </div>}
 
         {order.stage === 'logistics' && <div className="dd-panel">
-            <p className="dd-panel-role">Platform action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">Arrange pickup and dropoff</p>
             <p className="dd-panel-text">Collect from {order.pickupPlace} on {order.pickup}, store between semesters, deliver to {order.dropoffPlace} on {order.dropoff}.</p>
             <button className="mv-cta" onClick={() => update({ stage: 'transit' }, { step: 11, note: 'Pickup and dropoff arranged: ' + order.pickup + ' at ' + order.pickupPlace + ', delivery ' + order.dropoff + ' at ' + order.dropoffPlace + '.' })}><Icon name="truck" size={17} />Arrange pickup and dropoff</button>
         </div>}
 
         {order.stage === 'transit' && <div className="dd-panel">
-            <p className="dd-panel-role">Platform action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">Furniture on its way</p>
             <p className="dd-panel-text">The crew picks up, stores and delivers. Mark the order delivered when the buyer has the furniture.</p>
             <button className="mv-cta" onClick={() => update({ stage: 'delivered' }, { step: 11, note: 'Furniture delivered to ' + order.dropoffPlace + '.' })}>Mark as delivered<Icon name="arrow" size={17} /></button>
         </div>}
 
         {order.stage === 'delivered' && <div className="dd-panel">
-            <p className="dd-panel-role">Buyer action (demo)</p>
+            <p className="dd-panel-role">Next step</p>
             <p className="dd-panel-title">Pay the platform</p>
             <p className="dd-panel-text">Furniture received. Remaining balance: {money(order.price - order.deposit)} plus {money(DELIVERY_FEE)} delivery{order.addonsTotal ? ' plus ' + money(order.addonsTotal) + ' add-ons (' + order.addons + ')' : ''} = {money(remaining)}.</p>
             <button className="mv-cta" onClick={() => update({ stage: 'complete' }, { step: 12, note: 'Buyer received the furniture and paid the platform ' + money(remaining) + ' (demo).' })}><Icon name="wallet" size={17} />Pay {money(remaining)} (demo)</button>

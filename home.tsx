@@ -57,7 +57,7 @@ export function Start() {
                 <span className="mv-label-icon"><Icon name="list" size={15} /></span>
                 <span>
                     <span className="t">My orders</span>
-                    <span className="d" style={{ display: 'block' }}>Track each order through the full 13-step flow.</span>
+                    <span className="d" style={{ display: 'block' }}>See where each order stands and what happens next.</span>
                 </span>
                 <span className="arr"><Icon name="arrow" size={16} /></span>
             </Link>
@@ -94,25 +94,25 @@ export function HowItWorks() {
             <div className="mv-model">
                 <div className="mv-model-top"><span className="mv-model-n"><Icon name="search" size={14} /></span><p className="mv-model-name">Buyer</p></div>
                 <dl>
-                    <div><dt>Steps 1-2</dt><dd>Request furniture: types, preferred colors, dropoff date and place. Accept the estimated price.</dd></div>
-                    <div><dt>Step 5</dt><dd>Pick one seller offer and make a deposit to hold it.</dd></div>
-                    <div><dt>Step 12</dt><dd>Receive the furniture and pay the platform the remaining balance.</dd></div>
+                    <div><dt>Request</dt><dd>Tell us what pieces you need, your colors, and when and where to deliver. You see the estimated price right away.</dd></div>
+                    <div><dt>Offer & deposit</dt><dd>Pick one seller offer and hold it with a deposit.</dd></div>
+                    <div><dt>Delivery</dt><dd>Receive the furniture and pay the remaining balance.</dd></div>
                 </dl>
             </div>
             <div className="mv-model">
                 <div className="mv-model-top"><span className="mv-model-n"><Icon name="tag" size={14} /></span><p className="mv-model-name">Seller</p></div>
                 <dl>
-                    <div><dt>Steps 3-4</dt><dd>Enter furniture to sell: details, photos, condition, pickup date and place.</dd></div>
-                    <div><dt>Step 6</dt><dd>Confirm the order and the pickup date once a buyer commits.</dd></div>
-                    <div><dt>Step 13</dt><dd>Receive the payout after the buyer pays the platform.</dd></div>
+                    <div><dt>List</dt><dd>Add your furniture: details, photos, condition, and a pickup date and place.</dd></div>
+                    <div><dt>Confirm</dt><dd>Confirm the order and pickup once a buyer commits.</dd></div>
+                    <div><dt>Payout</dt><dd>Get paid once the furniture is delivered.</dd></div>
                 </dl>
             </div>
             <div className="mv-model">
                 <div className="mv-model-top"><span className="mv-model-n"><Icon name="shield" size={14} /></span><p className="mv-model-name">Platform</p></div>
                 <dl>
-                    <div><dt>Steps 7-8</dt><dd>Facilitate the quality check with the seller, digital and non-digital.</dd></div>
-                    <div><dt>Steps 9-10</dt><dd>Fraud: cancel and return the deposit. Below listing quality: renegotiate the price and update everyone.</dd></div>
-                    <div><dt>Step 11</dt><dd>Quality as submitted: arrange pickup and dropoff.</dd></div>
+                    <div><dt>Quality check</dt><dd>Every piece is compared with its listing, digitally and in person.</dd></div>
+                    <div><dt>If something is off</dt><dd>Below the listed condition, the buyer gets a lower price to consider. Not the real thing, the order is cancelled and the deposit returned.</dd></div>
+                    <div><dt>Moving</dt><dd>We pick up, store between semesters if needed, and deliver.</dd></div>
                 </dl>
             </div>
         </div>

@@ -132,7 +132,7 @@ export function BuyFlow() {
         <AppBar back />
         {step === 1 && <>
             <ScreenHead title="What do you need?" step={1} total={4} />
-            <Sub>Diagram step 1: request furniture - item types, preferred colors, dropoff date and place.</Sub>
+            <Sub>Tell us what you need: item types, preferred colors, and where and when to deliver.</Sub>
             <SectionLabel icon="search">Items</SectionLabel>
             <div className="mv-items">
                 {PIECES.map(p => <div className={'mv-item' + (items[p.id] > 0 ? ' on' : '')} key={p.id}>
@@ -177,11 +177,11 @@ export function BuyFlow() {
                 totalLabel="Estimated total" totalValue={money(estimate)}
                 note="Rough estimate from sample resale prices. The final price is the seller offer you accept on the next screen." />
             <CtaBar total={money(estimate)} label="Accept estimated price" disabled={!place || !date} onClick={() => { setOffers(buildOffers(items, market)); next(3); }} onBack={() => next(1)} />
-            <Caption>Diagram step 2: you accept the estimated price before offers are shown.</Caption>
+            <Caption>You accept the estimated price before offers are shown.</Caption>
         </>}
         {step === 3 && <>
             <ScreenHead title="Seller offers" step={3} total={4} />
-            <Sub>Diagram step 5: when several sellers match, you pick one offer and make the deposit.</Sub>
+            <Sub>When several sellers match, you pick one offer and hold it with a deposit.</Sub>
             <div className="dd-offers">
                 {offers.map(o => <div className={'dd-offer' + (picked?.id === o.id ? ' sel' : '')} key={o.id}>
                     <div className="dd-offer-top">
