@@ -69,7 +69,7 @@ export function AppBar({ back }: { back?: boolean }) {
     return <div className="mv-appbar">
         {back && <Link className="mv-back" to="/" aria-label="Back to home"><Icon name="back" size={16} /></Link>}
         <img className="dd-appbar-mark" src={logoMark} alt="" aria-hidden="true" />
-        <p className="mv-appbar-name">Dorm<span className="mv-brand-cycle">Drop</span></p>
+        <p className="mv-appbar-name">Dorm<span className="mv-brand-cycle">Dropp</span></p>
         <span className="mv-demo-pill">EARLY DEMO</span>
     </div>;
 }

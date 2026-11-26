@@ -38,7 +38,7 @@ export function RoomSets() {
  const save = () => {if(valid){setListing({title:title.trim(),contents:contents.trim(),individual:Number(individual),price:Number(price)});setNotice(true);setTab('buy');}};
  const choose = (s: SetListing) => {setSelected(s);setReserved(false);};
  return <div className="mv">
-  <div className="mv-appbar"><Link to="/" className="mv-back" aria-label="Back to home">←</Link><p className="mv-appbar-name">Dorm<span className="mv-brand-cycle">Drop</span></p><span className="mv-demo-pill">EARLY DEMO</span></div>
+  <div className="mv-appbar"><Link to="/" className="mv-back" aria-label="Back to home">←</Link><p className="mv-appbar-name">Dorm<span className="mv-brand-cycle">Dropp</span></p><span className="mv-demo-pill">EARLY DEMO</span></div>
   <h1 className="room-heading">One room. One set. Less hassle.</h1>
   <p className="app-para">Moving out? Sell your room's furniture together at a discount. Moving in? Get a complete set from one student.</p>
   <p className="room-disclaimer">Demo only. Listings stay in this browser, are not shared with other students, and do not create a real pickup, sale or payment.</p>
