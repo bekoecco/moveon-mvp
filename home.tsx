@@ -80,7 +80,7 @@ export function Start() {
             </div>)}
         </div>
         <Caption>Full-service mover extras, sized for a student budget. Demo prices, like everything here.</Caption>
-        <p className="mv-demo-line">Early demo with sample data: nothing is scheduled, charged or sent.</p>
+        <p className="mv-demo-line">Early demo with sample data: nothing is scheduled, charged or sent. Running the platform side? Open the <Link to="/admin">admin view</Link>.</p>
         <FeedbackCard />
     </div>;
 }

@@ -4,6 +4,7 @@ import { BuyFlow } from './buy';
 import { SellFlow } from './sell';
 import { OrderDetail, OrdersHub } from './orders';
 import { HowItWorks, Start } from './home';
+import { AdminView } from './admin';
 import { RoomSets } from './roomsets';
 
 export function App() {
@@ -17,6 +18,7 @@ export function App() {
             <Route path="/order" element={<OrderDetail />} />
             <Route path="/room-sets" element={<RoomSets />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/admin" element={<AdminView />} />
         </Routes>
         <Closing>Early demo, November 2026. Sample data throughout: no real pickups, deliveries, deposits, payouts or accounts. Everything is stored only in this browser.</Closing>
     </FileCard>;
