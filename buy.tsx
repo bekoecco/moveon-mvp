@@ -109,7 +109,7 @@ export function BuyFlow() {
                 <CheckMark />
                 <h1 className="mv-done-title">Deposit placed</h1>
                 <span className="mv-done-ref">{done.id}</span>
-                <p className="app-para">{done.seller} has your order. Next, the seller confirms the order and pickup date, then DormDrop runs the quality check.</p>
+                <p className="app-para">{done.seller} has your order. Next, the seller confirms the order and pickup date, then DormDropp runs the quality check.</p>
                 <div className="mv-ticket">
                     <div className="mv-ticket-head">ORDER SUMMARY (DEMO)</div>
                     <div className="mv-ticket-body">
@@ -200,7 +200,7 @@ export function BuyFlow() {
         </>}
         {step === 4 && picked && <>
             <ScreenHead title="Make the deposit" step={4} total={4} />
-            <Sub>A deposit holds the offer while DormDrop checks the furniture. It is returned if the order is cancelled.</Sub>
+            <Sub>A deposit holds the offer while DormDropp checks the furniture. It is returned if the order is cancelled.</Sub>
             <EstimatePanel
                 lines={[
                     { k: picked.seller + "'s offer", v: money(picked.price) },

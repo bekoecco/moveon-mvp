@@ -24,7 +24,7 @@ a { color: inherit; }
 html, body, #root { margin: 0; min-height: 100%; }
 body { background: var(--ds-page); }
 
-/* DormDrop theme: deep navy, white, orange, turquoise and blue. */
+/* DormDropp theme: deep navy, white, orange, turquoise and blue. */
 :root {
     --cc-navy: #102543;
     --cc-navy-2: #183858;
@@ -396,7 +396,7 @@ body { background: var(--ds-page); }
 .mv-addon-price { color:#102543; background:#91d1d0; }
 .mv-label-icon { color:#91d1d0; background:#234663; }
 .mv-feedback-btn { color:#102543; }
-/* ---------------- DormDrop hero (flat, no card, no glow) --------------- */
+/* ---------------- DormDropp hero (flat, no card, no glow) --------------- */
 .dd-appbar-mark { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; display: block; }
 .dd-hero { padding: 26px 4px 30px; }
 .dd-hero-mark { display: block; width: 76px; height: auto; margin: 0 0 22px; }

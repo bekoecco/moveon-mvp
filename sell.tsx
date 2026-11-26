@@ -107,7 +107,7 @@ export function SellFlow() {
         </>}
         {step === 2 && <>
             <ScreenHead title="Pickup date and place" step={2} total={3} />
-            <Sub>Diagram step 4: request a pickup date. DormDrop collects during move-out week.</Sub>
+            <Sub>Diagram step 4: request a pickup date. DormDropp collects during move-out week.</Sub>
             <SectionLabel icon="pin">Pickup campus</SectionLabel>
             <Chips label="Pickup campus" options={CAMPUSES} value={place} onChange={setPlace} />
             <SectionLabel icon="calendar">Pickup date</SectionLabel>
@@ -116,7 +116,7 @@ export function SellFlow() {
             <EstimatePanel
                 lines={[
                     { k: 'Sample resale value (' + count + ' item' + (count === 1 ? '' : 's') + ')', v: money(asking) },
-                    { k: 'DormDrop service share (10%)', v: '-' + money(asking - payout) },
+                    { k: 'DormDropp service share (10%)', v: '-' + money(asking - payout) },
                 ]}
                 totalLabel="Estimated payout" totalValue={money(payout)}
                 note="You are paid after your furniture sells and the buyer pays the platform. Quality is checked at pickup: if it does not match the listing, the price can be renegotiated or the order cancelled." />
@@ -130,7 +130,7 @@ export function SellFlow() {
                 <span className="mv-done-ref">{saved.id}</span>
                 <p className="app-para">{saved.items} - {saved.condition.toLowerCase()} condition, pickup {saved.date} at {saved.place}. Buyers can now see it as an offer (in this browser, demo only).</p>
                 {saved.photo && <img src={saved.photo} alt="Listing" style={{ width: '100%', borderRadius: 16, margin: '6px 0 4px' }} />}
-                <div className="dd-banner">When a buyer accepts your offer and makes a deposit, you confirm the order and pickup date. Then DormDrop checks the quality, delivers, and you receive the payout.</div>
+                <div className="dd-banner">When a buyer accepts your offer and makes a deposit, you confirm the order and pickup date. Then DormDropp checks the quality, delivers, and you receive the payout.</div>
                 <div style={{ display: 'grid', gap: 10, marginTop: 14 }}>
                     <button className="mv-cta" onClick={simulateOrder}>Simulate an incoming buyer order (demo)<Icon name="arrow" size={17} /></button>
                     <button className="mv-ghost" onClick={() => go('/orders')}>See my listings and orders</button>

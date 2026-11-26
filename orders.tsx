@@ -156,7 +156,7 @@ export function OrderDetail() {
         {order.stage === 'quality' && <div className="dd-panel">
             <p className="dd-panel-role">Platform action (demo)</p>
             <p className="dd-panel-title">Run the quality check</p>
-            <p className="dd-panel-text">DormDrop compares the listing photos and condition with the furniture, digitally first and in person at pickup. Listing says: {order.condition.toLowerCase()} condition.</p>
+            <p className="dd-panel-text">DormDropp compares the listing photos and condition with the furniture, digitally first and in person at pickup. Listing says: {order.condition.toLowerCase()} condition.</p>
             <div className="dd-panel-row">
                 <button className="mv-cta" onClick={() => update({ stage: 'logistics', qcOutcome: 'pass' }, { step: 8, note: 'Quality check passed: furniture as submitted.' })}><Icon name="shield" size={17} />Quality as submitted</button>
                 <button className="mv-ghost" onClick={() => update({ qcOutcome: 'mismatch' })}><Icon name="refresh" size={16} />Quality not as submitted</button>

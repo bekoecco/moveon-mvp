@@ -18,10 +18,10 @@ export function Start() {
     return <div className="mv">
         <AppBar />
         <section className="dd-hero">
-            <img className="dd-hero-mark" src={logoMark} alt="DormDrop logo: a house dropping into a box" />
+            <img className="dd-hero-mark" src={logoMark} alt="DormDropp logo: a house dropping into a box" />
             <p className="dd-eyebrow">Student furniture marketplace</p>
             <h1 className="dd-title">Move out lighter.<br />Move in furnished.</h1>
-            <p className="dd-lede">Request the furniture you need or list what you are leaving behind. DormDrop checks the quality, then handles pickup, delivery and the payout.</p>
+            <p className="dd-lede">Request the furniture you need or list what you are leaving behind. DormDropp checks the quality, then handles pickup, delivery and the payout.</p>
             <div className="dd-actions">
                 <Link className="dd-btn dd-btn-primary" to="/buy">
                     <span><b>I need furniture</b><small>Request pieces, pick an offer</small></span>
@@ -44,7 +44,7 @@ export function Start() {
         <ol className="mv-steps">
             <li className="mv-step"><span className="mv-step-n">1</span><p>You request furniture and get an instant estimate. Sellers list pieces with photos and condition.</p></li>
             <li className="mv-step"><span className="mv-step-n">2</span><p>You pick one seller offer and make a deposit. The seller confirms the order and pickup date.</p></li>
-            <li className="mv-step"><span className="mv-step-n">3</span><p>DormDrop checks the quality. If it does not match the listing, the price is renegotiated or the deposit comes back.</p></li>
+            <li className="mv-step"><span className="mv-step-n">3</span><p>DormDropp checks the quality. If it does not match the listing, the price is renegotiated or the deposit comes back.</p></li>
             <li className="mv-step"><span className="mv-step-n">4</span><p>We pick up, store and deliver. You pay on delivery, and the seller receives the payout.</p></li>
         </ol>
         <div style={{ marginTop: 16, display: 'grid', gap: 10 }}>
@@ -84,7 +84,7 @@ export function HowItWorks() {
     return <div className="mv">
         <AppBar back />
         <div className="mv-top"><p className="mv-top-title">How it works</p></div>
-        <p className="app-para">DormDrop is a managed marketplace: buyers and sellers never handle logistics or money directly. The platform sits in the middle, checks quality and moves both the furniture and the payment.</p>
+        <p className="app-para">DormDropp is a managed marketplace: buyers and sellers never handle logistics or money directly. The platform sits in the middle, checks quality and moves both the furniture and the payment.</p>
         <div className="mv-models">
             <div className="mv-model">
                 <div className="mv-model-top"><span className="mv-model-n"><Icon name="search" size={14} /></span><p className="mv-model-name">Buyer</p></div>

@@ -7,7 +7,7 @@ import { HowItWorks, Start } from './home';
 import { RoomSets } from './roomsets';
 
 export function App() {
-    React.useEffect(() => { document.title = 'DormDrop - student furniture marketplace (early demo)'; }, []);
+    React.useEffect(() => { document.title = 'DormDropp - student furniture marketplace (early demo)'; }, []);
     return <FileCard>
         <Routes>
             <Route path="/" element={<Start />} />
