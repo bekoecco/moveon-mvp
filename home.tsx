@@ -4,6 +4,7 @@ import { Caption, Link } from './ui';
 import { ADDONS } from './data';
 import { money } from './market';
 import { AppBar, Icon, SectionLabel } from './widgets';
+import { Boxy, CrayonDefs, Scribble, StoryStrip } from './crayon';
 import logoMark from './mark.webp';
 
 export function FeedbackCard() {
@@ -17,10 +18,12 @@ export function FeedbackCard() {
 export function Start() {
     return <div className="mv">
         <AppBar />
+        <CrayonDefs />
         <section className="dd-hero">
             <img className="dd-hero-mark" src={logoMark} alt="DormDropp logo: a house dropping into a box" />
             <p className="dd-eyebrow">Student furniture marketplace</p>
             <h1 className="dd-title">Move out lighter.<br />Move in furnished.</h1>
+            <Scribble />
             <p className="dd-lede">Request the furniture you need or list what you are leaving behind. DormDropp checks the quality, then handles pickup, delivery and the payout.</p>
             <div className="dd-actions">
                 <Link className="dd-btn dd-btn-primary" to="/buy">
@@ -33,6 +36,7 @@ export function Start() {
                 </Link>
             </div>
             <p className="dd-check"><span aria-hidden="true">✓</span> Every piece is cleaned, inspected and quality-checked before delivery.</p>
+            <div className="cr-hero-row"><Boxy caption="Hi, I'm Boxy. I follow every sofa to its new room." /></div>
         </section>
         <Link className="room-feature" to="/room-sets">
             <span className="room-eyebrow">NEW · BULK ROOM SETS</span>
@@ -40,6 +44,7 @@ export function Start() {
             <p>Sell your furniture as one discounted set, or buy a full room from a moving-out student.</p>
             <span className="room-feature-action">Explore room sets →</span>
         </Link>
+        <StoryStrip />
         <SectionLabel icon="spark">How a trade goes</SectionLabel>
         <ol className="mv-steps">
             <li className="mv-step"><span className="mv-step-n">1</span><p>You request furniture and get an instant estimate. Sellers list pieces with photos and condition.</p></li>

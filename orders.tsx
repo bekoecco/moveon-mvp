@@ -3,6 +3,7 @@ import { Link, useLocalState } from './ui';
 import { DELIVERY_FEE, PAYOUT_PCT } from './data';
 import { EMPTY_MARKET, Market, Order, OrderStage, STAGE_LABEL, money } from './market';
 import { AppBar, Icon, SectionLabel } from './widgets';
+import { Boxy } from './crayon';
 
 /* The 13 steps of Bek's flow diagram, grouped by actor. */
 const STEPS: { n: number; actor: 'buyer' | 'seller' | 'platform'; title: string }[] = [
@@ -114,6 +115,11 @@ export function OrderDetail() {
             <span className={pillClass(order.stage)} style={{ marginLeft: 'auto' }}>{STAGE_LABEL[order.stage]}</span>
         </div>
         <p className="app-caption">{order.summary} - {money(order.price)} - {order.own === 'buyer' ? 'seller: ' + order.seller : 'buyer: ' + order.buyer}</p>
+        <div className="cr-hero-row" style={{ marginTop: 4, marginBottom: 6 }}><Boxy mood={order.stage === 'cancelled' ? 'sad' : 'happy'} caption={
+            order.stage === 'complete' ? 'Delivered. New room, happy sofa.' :
+            order.stage === 'cancelled' ? 'This one fell through. The deposit went back.' :
+            order.stage === 'transit' ? 'On the truck. I am riding along.' :
+            'Following this order step by step.'} /></div>
 
         {order.stage === 'cancelled' && <div className="dd-banner warn">
             Order cancelled{order.qcOutcome === 'fraud' ? ' for fraud: the furniture did not match the listing at all' : ''}. The {money(order.deposit)} deposit was returned to the buyer (demo).
