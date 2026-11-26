@@ -1,9 +1,10 @@
 import React from 'react';
 import { Caption } from './ui';
 import {
-    CAMPUSES, COLORS, DELIVERY_FEE, DEMO_SELLERS, DEPOSIT_PCT, DROPOFF_DATES,
-    PIECES, PIECE_BY_ID,
+    ADDONS, CAMPUSES, COLORS, DELIVERY_FEE, DEMO_SELLERS, DEPOSIT_PCT,
+    PIECES,
 } from './data';
+import { DatePicker, fmtDate } from './calendar';
 import { EMPTY_MARKET, Market, Order, go, makeRef, money } from './market';
 import {
     AppBar, CheckMark, Chips, CtaBar, EstimatePanel, Gradients, Icon, ScreenHead, SectionLabel, Stepper, Sub, scrollTop,
@@ -57,13 +58,16 @@ export function BuyFlow() {
     const [color, setColor] = React.useState('Any color');
     const [place, setPlace] = React.useState('');
     const [date, setDate] = React.useState('');
+    const [addons, setAddons] = React.useState<Record<string, boolean>>({});
     const [offers, setOffers] = React.useState<Offer[]>([]);
     const [picked, setPicked] = React.useState<Offer | null>(null);
     const [done, setDone] = React.useState<Order | null>(null);
 
     const count = Object.values(items).reduce((a, b) => a + b, 0);
     const subtotal = subtotalOf(items);
-    const estimate = subtotal + DELIVERY_FEE;
+    const addonList = ADDONS.filter(a => addons[a.id]);
+    const addonsTotal = addonList.reduce((s, a) => s + a.price, 0);
+    const estimate = subtotal + DELIVERY_FEE + addonsTotal;
 
     const next = (n: number) => { setStep(n); scrollTop(); };
 
@@ -79,14 +83,16 @@ export function BuyFlow() {
             deposit: Math.max(5, Math.round(picked.price * DEPOSIT_PCT)),
             pickup: picked.pickup,
             pickupPlace: picked.pickupPlace,
-            dropoff: date,
+            dropoff: fmtDate(date),
             dropoffPlace: place,
             condition: picked.condition,
+            addons: addonList.length ? addonList.map(a => a.name).join(', ') : undefined,
+            addonsTotal: addonsTotal || undefined,
             stage: 'awaiting-seller',
             events: [
                 { step: 1, note: 'You requested furniture: ' + picked.summary + '.' },
                 { step: 2, note: 'You accepted the estimated price.' },
-                { step: 5, note: 'You accepted ' + picked.seller + "'s offer and made a " + money(Math.max(5, Math.round(picked.price * DEPOSIT_PCT))) + ' deposit (demo).' },
+                { step: 5, note: 'You accepted ' + picked.seller + "'s offer and made a " + money(Math.max(5, Math.round(picked.price * DEPOSIT_PCT))) + ' deposit (demo).' + (addonList.length ? ' Add-ons: ' + addonList.map(a => a.name).join(', ') + '.' : '') },
             ],
         };
         setMarket({ ...market, orders: [order, ...market.orders] });
@@ -148,11 +154,24 @@ export function BuyFlow() {
             <SectionLabel icon="pin">Dropoff campus</SectionLabel>
             <Chips label="Dropoff campus" options={CAMPUSES} value={place} onChange={setPlace} />
             <SectionLabel icon="calendar">Dropoff date</SectionLabel>
-            <Chips label="Dropoff date" options={DROPOFF_DATES} value={date} onChange={setDate} />
+            <DatePicker label="Dropoff date" value={date} onChange={setDate} />
+            <SectionLabel icon="box">Moving add-ons (optional)</SectionLabel>
+            <div className="mv-services">
+                {ADDONS.map(a => <button type="button" key={a.id} className={'mv-service' + (addons[a.id] ? ' on' : '')}
+                    onClick={() => setAddons({ ...addons, [a.id]: !addons[a.id] })}>
+                    <span className="mv-service-icon"><Icon name={a.icon} size={20} /></span>
+                    <span>
+                        <p className="mv-service-name">{a.name} - {money(a.price)}</p>
+                        <p className="mv-service-detail">{a.detail}</p>
+                    </span>
+                    <span className="mv-service-check"><Icon name="check" size={13} /></span>
+                </button>)}
+            </div>
             <SectionLabel icon="wallet">Your estimate</SectionLabel>
             <EstimatePanel
                 lines={[
                     { k: 'Furniture (' + count + ' item' + (count === 1 ? '' : 's') + ')', v: money(subtotal) },
+                    ...(addonList.length ? [{ k: 'Add-ons', v: money(addonsTotal) }] : []),
                     { k: 'Delivery', v: money(DELIVERY_FEE) },
                 ]}
                 totalLabel="Estimated total" totalValue={money(estimate)}
@@ -185,10 +204,11 @@ export function BuyFlow() {
             <EstimatePanel
                 lines={[
                     { k: picked.seller + "'s offer", v: money(picked.price) },
+                    ...(addonsTotal ? [{ k: 'Add-ons (paid on delivery)', v: money(addonsTotal) }] : []),
                     { k: 'Delivery (paid on delivery)', v: money(DELIVERY_FEE) },
                     { k: 'Deposit due now (20%)', v: money(Math.max(5, Math.round(picked.price * DEPOSIT_PCT))) },
                 ]}
-                totalLabel="Due on delivery" totalValue={money(picked.price - Math.max(5, Math.round(picked.price * DEPOSIT_PCT)) + DELIVERY_FEE)}
+                totalLabel="Due on delivery" totalValue={money(picked.price - Math.max(5, Math.round(picked.price * DEPOSIT_PCT)) + DELIVERY_FEE + addonsTotal)}
                 note="Demo payment: no card is charged. The deposit is returned if the quality check fails or the order is cancelled." />
             <CtaBar total={money(Math.max(5, Math.round(picked.price * DEPOSIT_PCT)))} totalLabel="Deposit (demo)" label="Pay deposit (demo)" disabled={false} onClick={placeDeposit} onBack={() => next(3)} />
         </>}

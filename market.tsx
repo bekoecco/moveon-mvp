@@ -19,6 +19,8 @@ export type Order = {
     dropoff: string;
     dropoffPlace: string;
     condition: string;
+    addons?: string;
+    addonsTotal?: number;
     stage: OrderStage;
     qcOutcome?: 'pass' | 'mismatch' | 'fraud';
     newPrice?: number;

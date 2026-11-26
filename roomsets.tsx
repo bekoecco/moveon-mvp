@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocalState } from './ui';
+import { EMPTY_MARKET, Market, Order, go, makeRef } from './market';
 
 type SetListing = { title: string; contents: string; individual: number; price: number };
 const sample: SetListing = { title: 'Complete student room', contents: 'Desk, desk chair, floor lamp, full bed frame, mattress, nightstand, dresser and bookshelf. Sample listing from one moving-out student.', individual: 325, price: 260 };
@@ -14,6 +15,25 @@ export function RoomSets() {
  const [notice,setNotice] = React.useState(false);
  const [selected,setSelected] = React.useState<SetListing|null>(null);
  const [reserved,setReserved] = React.useState(false);
+ const [market,setMarket] = useLocalState<Market>('dormdrop-market.v2',EMPTY_MARKET);
+ const [,setCurrent] = useLocalState<string>('dormdrop-current-order','');
+ const reserve = (s: SetListing) => {
+  const order: Order = {
+   id: makeRef('DD'), buyer: 'You', seller: 'Student seller', own: 'buyer',
+   summary: 'Whole-room set: ' + s.title, price: s.price, deposit: Math.max(5, Math.round(s.price * 0.2)),
+   pickup: 'Sat 20 Dec 2026', pickupPlace: 'Campus pickup point',
+   dropoff: 'Mon 11 Jan 2027', dropoffPlace: 'Campus delivery point',
+   condition: 'Good', stage: 'awaiting-seller',
+   events: [
+    { step: 1, note: 'You reserved the whole-room set "' + s.title + '": ' + s.contents },
+    { step: 2, note: 'You accepted the set price of $' + s.price + ' (demo).' },
+    { step: 5, note: 'Deposit of $' + Math.max(5, Math.round(s.price * 0.2)) + ' placed on the room-set offer (demo).' },
+   ],
+  };
+  setMarket({ ...market, orders: [order, ...market.orders] });
+  setCurrent(order.id);
+  setReserved(true);
+ };
  const valid = !!title.trim() && !!contents.trim() && Number(individual)>0 && Number(price)>0 && Number(price)<Number(individual) && Number.isFinite(Number(price)) && Number.isFinite(Number(individual));
  const save = () => {if(valid){setListing({title:title.trim(),contents:contents.trim(),individual:Number(individual),price:Number(price)});setNotice(true);setTab('buy');}};
  const choose = (s: SetListing) => {setSelected(s);setReserved(false);};
@@ -37,7 +57,7 @@ export function RoomSets() {
    {selected ? <section className="mv-model">
     <h2>{reserved?'Demo reservation complete':'Review whole-room set'}</h2><h3>{selected.title}</h3><p>{selected.contents}</p>
     <dl className="app-facts"><div><dt>Room-set price</dt><dd>{dollars(selected.price)}</dd></div><div><dt>Demo delivery</dt><dd>$29</dd></div><div><dt>Total demo estimate</dt><dd>{dollars(selected.price+29)}</dd></div></dl>
-    {reserved ? <p role="status" className="room-savings">Nothing was purchased, charged, held or sent. This is only a demo reservation.</p> : <><p className="app-caption">The entire set stays together. No pieces are removed or sold separately in this demo. All prices are sample estimates.</p><button className="mv-cta" onClick={()=>setReserved(true)}>Reserve full set, demo only</button></>}
+    {reserved ? <><p role="status" className="room-savings">Demo reservation placed. It now shows in My orders like any other order, and you can walk it through the full flow there.</p><button className="mv-cta" onClick={()=>go('/order')}>Track this order</button></> : <><p className="app-caption">The entire set stays together. No pieces are removed or sold separately in this demo. All prices are sample estimates.</p><button className="mv-cta" onClick={()=>reserve(selected)}>Reserve full set, demo only</button></>}
     <button className="mv-ghost" onClick={()=>setSelected(null)}>Back to room sets</button>
    </section> : <div className="room-list">{[...(listing?[{...listing,own:true}]:[]),{...sample,own:false}].map((s,i)=><article className="mv-model" key={i}>
     <span className="room-eyebrow">{s.own?'YOUR LOCAL DEMO LISTING':'SAMPLE STUDENT LISTING'} · ENTIRE ROOM</span><h2>{s.title}</h2><p className="app-para">{s.contents}</p>

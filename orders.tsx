@@ -104,7 +104,7 @@ export function OrderDetail() {
         document.querySelector('.mv-appbar')?.scrollIntoView({ block: 'start' });
     };
 
-    const remaining = order.price - order.deposit + DELIVERY_FEE;
+    const remaining = order.price - order.deposit + DELIVERY_FEE + (order.addonsTotal || 0);
     const payout = Math.round(order.price * PAYOUT_PCT);
 
     return <div className="mv">
@@ -196,7 +196,7 @@ export function OrderDetail() {
         {order.stage === 'delivered' && <div className="dd-panel">
             <p className="dd-panel-role">Buyer action (demo)</p>
             <p className="dd-panel-title">Pay the platform</p>
-            <p className="dd-panel-text">Furniture received. Remaining balance: {money(order.price - order.deposit)} plus {money(DELIVERY_FEE)} delivery = {money(remaining)}.</p>
+            <p className="dd-panel-text">Furniture received. Remaining balance: {money(order.price - order.deposit)} plus {money(DELIVERY_FEE)} delivery{order.addonsTotal ? ' plus ' + money(order.addonsTotal) + ' add-ons (' + order.addons + ')' : ''} = {money(remaining)}.</p>
             <button className="mv-cta" onClick={() => update({ stage: 'complete' }, { step: 12, note: 'Buyer received the furniture and paid the platform ' + money(remaining) + ' (demo).' })}><Icon name="wallet" size={17} />Pay {money(remaining)} (demo)</button>
         </div>}
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Caption, useLocalState } from './ui';
-import { CAMPUSES, CONDITIONS, PICKUP_DATES, PIECES, PAYOUT_PCT } from './data';
+import { CAMPUSES, CONDITIONS, PIECES, PAYOUT_PCT } from './data';
+import { DatePicker, fmtDate } from './calendar';
 import { EMPTY_MARKET, Listing, Market, Order, go, makeRef, money, readPhoto } from './market';
 import {
     AppBar, CheckMark, Chips, CtaBar, EstimatePanel, Gradients, Icon, ScreenHead, SectionLabel, Stepper, Sub, scrollTop,
@@ -36,7 +37,7 @@ export function SellFlow() {
             condition,
             photo: photo || undefined,
             place,
-            date,
+            date: fmtDate(date),
             asking,
             payout,
         };
@@ -110,7 +111,7 @@ export function SellFlow() {
             <SectionLabel icon="pin">Pickup campus</SectionLabel>
             <Chips label="Pickup campus" options={CAMPUSES} value={place} onChange={setPlace} />
             <SectionLabel icon="calendar">Pickup date</SectionLabel>
-            <Chips label="Pickup date" options={PICKUP_DATES} value={date} onChange={setDate} />
+            <DatePicker label="Pickup date" value={date} onChange={setDate} />
             <SectionLabel icon="wallet">Your estimated payout</SectionLabel>
             <EstimatePanel
                 lines={[
